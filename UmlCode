@@ -1,0 +1,25 @@
+---
+title: Hotel Reservation System
+---
+classDiagram
+    class Person {
+
+    }
+    class Customer{
+
+    }
+    class Employee{
+
+    }
+    class Manager{
+
+    }
+    class  Hotel{
+
+    }
+    class Room {
+
+    }
+    class Booking{
+
+    }
