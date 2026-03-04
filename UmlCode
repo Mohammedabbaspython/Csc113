@@ -1,11 +1,14 @@
 ---
+config:
+  layout: elk
 title: Hotel Reservation System
 ---
 classDiagram
-    class Person {
-
+    class Person{
+        -String name
+        -int id
     }
-    class Customer{
+    class Guest{
 
     }
     class Employee{
@@ -15,11 +18,79 @@ classDiagram
 
     }
     class  Hotel{
+        -String name
+        -Manager manager
+        -Employee[] employees
+        -int employeesCount
+        -Room[] rooms
+        -Booking[] bookings
+        -int roomCount
+        -int bookingCount
+        -double totalRevenue
+        +Hotel(String name, int maxRooms, int maxBookings, Manager manager, int maxEmpolyees)
+        +addRoom(String type, double price) boolean
+        +addBooking(Guest guest, int numberOfNights, int roomNumber, Employee emplyee) boolean
+        +availableRooms() Room[]
+        +cancelBooking(int bookingId) boolean
+        +findRoom(int roomNumber, int index) Room
+        +findBooking(int bookingId, int index) Booking
+        +findGuestBookings(Guest guest) Booking[]
+        +archiveCompleteBookings() boolean
+        +getRevenue() double
+        +hireEmployee() boolean
+        +fireEmployee() boolean
 
     }
     class Room {
+        -double nightPrice
+        -String type
+        -int roomNumber
+        -boolean isAvaiable
+
+
+        +Room(String type, double nightPrice, int roomNumber)
+        +toString() String
+        +bookRoom() boolean
+        +releaseRoom() boolean
+        +getRoomNumber() int
+        +getRoomType() String
+        +getPrice() double
 
     }
     class Booking{
+        -int bookingId
+        -Guest guest
+        -Room room
+        -int numberOfNights
+        -boolean isPaid
+        -boolean isCheckedOut
+        -Employee bookedBy
 
+        +Booking(int bookingId, Guest guest, Room room, int numberOfNights, Empolyee bookedBy)
+        +getRoom() Room
+        +getGuest() Guest
+        +getEmployee() Employee
+        +getIsPaid() boolean
+        +getIsCheckedOut() boolean
+        +toString() String
+        +payBill() boolean
+        +CheckOut() boolean
+        +getPrice() double
     }
+    class Billable {
+        getPrice() double 
+    }
+    Person <|-- Guest 
+    Person <|-- Employee
+    Employee <|-- Manager
+    <<abstract>> Person
+    <<interface>> Billable
+    Hotel "1" *-- "1..*" Room 
+    Hotel "1" *-- "0..*" Booking
+    Hotel "1" o-- "1" Manager
+    Hotel "1" o-- "1..*" Employee
+    Booking "0..*" o-- "1" Guest
+    Booking "0..*" o-- "1" Room
+    Booking "0..*" o-- "1" Employee
+    Room ..> Billable
+    Booking ..> Billable
