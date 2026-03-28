@@ -8,6 +8,7 @@ direction LR
     class Person {
 	    #String name
 	    #int id
+		+Person(String name, int id)
 		+printRole()* void
 		+getName() String
 		+getId() int
