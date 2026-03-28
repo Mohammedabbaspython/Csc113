@@ -55,6 +55,7 @@ direction LR
 	    +findGuestBookings(Guest guest) Booking[]
 	    +archiveCompleteBookings() boolean
 	    +getRevenue() double
+		+getEmployees() Employee[]
 	    +hireEmployee(Employee employee) boolean
 	    +fireEmployee(Employee employee) boolean
     }
