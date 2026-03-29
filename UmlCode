@@ -92,6 +92,7 @@ direction LR
 	    +payBill() boolean
 	    +checkOut() boolean
 	    +getPrice() double
+		+getBookingId() int
     }
 
     class Billable {
