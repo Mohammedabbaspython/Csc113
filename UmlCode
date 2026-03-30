@@ -12,6 +12,7 @@ direction LR
 		+printRole()* void
 		+getName() String
 		+getId() int
+		+toString() String
     }
 
     class Guest {
