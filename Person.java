@@ -17,6 +17,6 @@ public abstract class Person {
     }
 
     public String toString() {
-        return "name: " + name + "id: " + id;
+        return "Name: " + name + " ID: " + id;
     }
 }
