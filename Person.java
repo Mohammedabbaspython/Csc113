@@ -4,7 +4,7 @@ public abstract class Person {
 
     public abstract void printRole();
 
-    Person(String name, int id){
+    public Person(String name, int id){
         this.name=name;
         this.id = id;
     }

@@ -1,7 +1,7 @@
 public class Guest extends Person{
     private String phoneNumber;
 
-    Guest(String name, int id, String phoneNumber){
+    public Guest(String name, int id, String phoneNumber){
          super(name, id);
          this.phoneNumber = phoneNumber;
     }
