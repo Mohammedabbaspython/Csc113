@@ -11,6 +11,6 @@ public class Manager extends Employee{
     }
 
     public void printRole() {
-        System.out.println("Guest");
+        System.out.println("Manager");
     }
 }
