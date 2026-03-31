@@ -30,12 +30,12 @@
 * **`addBooking(Guest guest, int numberOfNights, int roomNumber, Employee employee)`**
     * **Logic:** First checks if `bookingCount < maxBookings`. Then uses `findRoom()` to verify the room exists and `isAvailable`. If valid, it instantiates the `Booking` (Composition), calls `bookRoom()` on the room, adds it to the array, and increments the counter.
 * **`cancelBooking(int bookingId)`**
-    * **Logic:** Uses `findBooking()` to locate the record. If found, it calls `releaseRoom()` on the associated room, removes the booking from the array, and shifts the remaining array elements to the left to avoid `null` gaps.
+    * **Logic:** Uses a loop to search the array and locate the record by its booking ID. If found, it calls `releaseRoom()` on the associated room, removes the booking from the array, and shifts the remaining array elements to the left to avoid `null` gaps.
 * **`availableRooms()`**
     * **Logic:** Loops through `rooms` to count how many are available. It creates a new `Room[]` array of that exact count, populates it with only the available rooms, and returns the new array.
 * **`findRoom(int roomNumber, int index)` & `findBooking(int bookingId, int index)`**
     * **Logic (Strict Recursion):** Base case 1: `index >= count` (returns `null`). Base case 2: object ID at current index matches target (returns the object). Recursive step: return the method calling itself with `index + 1`. No loops allowed!
 * **`archiveCompleteBookings()`**
-    * **Logic:** Loops through `bookings`. If a booking's `isPaid` AND `isCheckedOut` are both `true`, it adds the booking's `getPrice()` to `totalRevenue`, removes it from the array, and shifts the remaining elements down to free up capacity.
+    * **Logic:** Loops through `bookings`. If a booking's `isCheckedOut` is `true` (which guarantees the bill is already paid), it adds the booking's `getPrice()` to `totalRevenue`, removes it from the array, and shifts the remaining elements down to free up capacity.
 * **`hireEmployee(Employee employee)` / `fireEmployee(Employee employee)`**
     * **Logic:** `hire` checks array limits before adding. `fire` searches for the employee, removes them, and shifts the array elements to the left to maintain a contiguous list without empty spaces.
