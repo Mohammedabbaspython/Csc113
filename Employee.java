@@ -11,6 +11,6 @@ public class Employee extends Person {
    }
     
   public void printRole(){
-    System.out.print("Employee");
+    System.out.println("Employee");
   }
 }
