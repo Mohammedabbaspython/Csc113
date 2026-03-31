@@ -48,7 +48,6 @@ public class Hotel {
         bookings[bookingCount] = booking;
         bookingCount++;
 
-        totalRevenue += booking.getPrice();
         return true;
     }
 
@@ -84,12 +83,11 @@ public class Hotel {
             }
         }
 
-        if (index == -1) {
+        if (index == -1 || bookings[index].getIsCheckedOut()) {
             return false;
         }
 
         bookings[index].getRoom().releaseRoom();
-        totalRevenue -= bookings[index].getPrice();
 
         for (int i = index; i < bookingCount - 1; i++) {
             bookings[i] = bookings[i + 1];
@@ -152,6 +150,7 @@ public class Hotel {
 
         for (int i = 0; i < bookingCount; i++) {
             if (bookings[i].getIsCheckedOut()) {
+                totalRevenue += bookings[i].getPrice();
                 for (int j = i; j < bookingCount - 1; j++) {
                     bookings[j] = bookings[j + 1];
                 }
@@ -173,6 +172,12 @@ public class Hotel {
     public boolean hireEmployee(Employee employee) {
         if (employeesCount >= employees.length) {
             return false;
+        }
+        // check if employee is already hired
+        for (int i = 0; i < employeesCount; i++) {
+            if (employee == employees[i]) {
+                return false;
+            }
         }
 
         employees[employeesCount] = employee;
@@ -204,7 +209,6 @@ public class Hotel {
         return true;
     }
 
-    @Override
     public String toString() {
         String result = "Hotel Name: " + name +
                 "\nManager: " + manager +
@@ -226,5 +230,13 @@ public class Hotel {
         }
 
         return result;
+    }
+
+    public Employee[] getEmployees() {
+        Employee[] hiredEmployees = new Employee[employeesCount];
+        for (int i = 0; i < employeesCount; i++){
+            hiredEmployees[i] = employees[i];
+        }
+        return hiredEmployees;
     }
 }

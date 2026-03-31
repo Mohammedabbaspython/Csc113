@@ -59,6 +59,7 @@ direction LR
 		+getEmployees() Employee[]
 	    +hireEmployee(Employee employee) boolean
 	    +fireEmployee(Employee employee) boolean
+		+toString() String
     }
 
     class Room {
@@ -73,6 +74,7 @@ direction LR
 	    +getRoomNumber() int
 	    +getRoomType() String
 	    +getPrice() double
+		+isAvailable() boolean
     }
 
     class Booking {
@@ -97,7 +99,7 @@ direction LR
     }
 
     class Billable {
-	    getPrice() double
+	    +getPrice()* double
     }
 
 	<<abstract>> Person
@@ -106,12 +108,12 @@ direction LR
     Person <|-- Guest
     Person <|-- Employee
     Employee <|-- Manager
-    Hotel "1" *-- "1..*" Room
+    Hotel "1" *-- "0..*" Room
     Hotel "1" *-- "0..*" Booking
     Hotel "1" o-- "1" Manager
-    Hotel "1" o-- "1..*" Employee
+    Hotel "1" o-- "0..*" Employee
     Booking "0..*" o-- "1" Guest
     Booking "0..*" o-- "1" Room
     Booking "0..*" o-- "1" Employee
-    Room ..> Billable
-    Booking ..> Billable
+    Room ..|> Billable
+    Booking ..|> Billable
