@@ -9,6 +9,7 @@ public class Hotel {
     private int bookingCount;
     private double totalRevenue;
 
+    // constructor
     public Hotel(String name, int maxRooms, int maxBookings, Manager manager, int maxEmployees) {
         this.name = name;
         this.manager = manager;
@@ -21,6 +22,7 @@ public class Hotel {
         this.totalRevenue = 0;
     }
 
+    // adds a new room to the hotel and assigns it a number
     public boolean addRoom(String type, double price) {
         if (roomCount >= rooms.length) {
             return false;
@@ -31,6 +33,7 @@ public class Hotel {
         return true;
     }
 
+    // create a new booking and adds it to the bookings array
     public boolean addBooking(Guest guest, int numberOfNights, int roomNumber, Employee employee) {
         if (bookingCount >= bookings.length) {
             return false;
@@ -38,7 +41,7 @@ public class Hotel {
 
         Room room = findRoom(roomNumber, 0);
 
-        if (room == null || !room.isAvailable()) {
+        if (room == null || !room.getIsAvailable()) {
             return false;
         }
 
@@ -51,11 +54,12 @@ public class Hotel {
         return true;
     }
 
+    // return an array of all the available rooms in the hotel
     public Room[] availableRooms() {
         int count = 0;
 
         for (int i = 0; i < roomCount; i++) {
-            if (rooms[i] != null && rooms[i].isAvailable()) {
+            if (rooms[i] != null && rooms[i].getIsAvailable()) {
                 count++;
             }
         }
@@ -64,7 +68,7 @@ public class Hotel {
         int j = 0;
 
         for (int i = 0; i < roomCount; i++) {
-            if (rooms[i] != null && rooms[i].isAvailable()) {
+            if (rooms[i] != null && rooms[i].getIsAvailable()) {
                 available[j] = rooms[i];
                 j++;
             }
@@ -73,6 +77,7 @@ public class Hotel {
         return available;
     }
 
+    // remove a booking from list and releases the room
     public boolean cancelBooking(int bookingId) {
         int index = -1;
 
@@ -99,6 +104,8 @@ public class Hotel {
         return true;
     }
 
+    // recursive method that find and return a room by looking for it using room number
+
     public Room findRoom(int roomNumber, int index) {
         if (index >= roomCount) {
             return null;
@@ -111,6 +118,7 @@ public class Hotel {
         return findRoom(roomNumber, index + 1);
     }
 
+    // recursive method that find and return a booking by looking for it using booking id
     public Booking findBooking(int bookingId, int index) {
         if (index >= bookingCount) {
             return null;
@@ -123,6 +131,7 @@ public class Hotel {
         return findBooking(bookingId, index + 1);
     }
 
+    // returns all the bookings of a specific guest
     public Booking[] findGuestBookings(Guest guest) {
         int count = 0;
 
@@ -145,6 +154,7 @@ public class Hotel {
         return result;
     }
 
+    // remove booking from list if it is checked out and returns true
     public boolean archiveCompleteBookings() {
         boolean removed = false;
 
@@ -165,10 +175,12 @@ public class Hotel {
         return removed;
     }
 
+    // getter
     public double getRevenue() {
         return totalRevenue;
     }
 
+    // add employee to the list if he is not in it and returns true
     public boolean hireEmployee(Employee employee) {
         if (employeesCount >= employees.length) {
             return false;
@@ -185,6 +197,7 @@ public class Hotel {
         return true;
     }
 
+    // remove employee if he is in the employees list and returns true
     public boolean fireEmployee(Employee employee) {
         int index = -1;
 
@@ -209,6 +222,7 @@ public class Hotel {
         return true;
     }
 
+    // string representation
     public String toString() {
         String result = "Hotel Name: " + name +
                 "\nManager: " + manager +
@@ -232,6 +246,7 @@ public class Hotel {
         return result;
     }
 
+    // getter
     public Employee[] getEmployees() {
         Employee[] hiredEmployees = new Employee[employeesCount];
         for (int i = 0; i < employeesCount; i++){

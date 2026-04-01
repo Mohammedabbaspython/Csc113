@@ -74,7 +74,7 @@ direction LR
 	    +getRoomNumber() int
 	    +getRoomType() String
 	    +getPrice() double
-		+isAvailable() boolean
+		+getIsAvailable() boolean
     }
 
     class Booking {

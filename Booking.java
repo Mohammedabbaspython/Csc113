@@ -17,7 +17,7 @@ public class Booking implements Billable {
         this.isPaid = false;
         this.isCheckedOut = false;
     }
-
+    // getters
     public Room getRoom() {
         return room;
     }
@@ -42,6 +42,7 @@ public class Booking implements Billable {
         return bookingId;
     }
 
+    // marks booking as paid
     public boolean payBill() {
         if (!isPaid) {
             isPaid = true;
@@ -50,6 +51,7 @@ public class Booking implements Billable {
         return false;
     }
 
+    // marks booking as checked out and releases the room
     public boolean checkOut() {
         if (isPaid && !isCheckedOut) {
             isCheckedOut = true;
@@ -58,12 +60,13 @@ public class Booking implements Billable {
         }
         return false;
     }
-    @Override
+    
+    // the returns the amount of the booking bill
     public double getPrice() {
         return room.getPrice() * numberOfNights;
     }
 
-    @Override
+    // string representation of booking
     public String toString() {
         return "Booking ID: " + bookingId +
                 ", Guest: " + guest +

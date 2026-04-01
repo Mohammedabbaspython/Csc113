@@ -4,6 +4,7 @@ public class Room implements Billable {
     private int roomNumber;
     private boolean isAvailable;
 
+    // constructor
     public Room(String type, double nightPrice, int roomNumber) {
         this.type = type;
         this.nightPrice = nightPrice;
@@ -11,6 +12,7 @@ public class Room implements Billable {
         this.isAvailable = true;
     }
 
+    // marks room as unavailable
     public boolean bookRoom() {
         if (!isAvailable) {
             return false;
@@ -20,6 +22,7 @@ public class Room implements Billable {
         return true;
     }
 
+    // marks room as available
     public boolean releaseRoom() {
         if (isAvailable) {
             return false;
@@ -29,6 +32,7 @@ public class Room implements Billable {
         return true;
     }
 
+    // getters
     public int getRoomNumber() {
         return roomNumber;
     }
@@ -37,16 +41,16 @@ public class Room implements Billable {
         return type;
     }
 
-    @Override
+    // returns the price of the night
     public double getPrice() {
         return nightPrice;
     }
 
-    public boolean isAvailable() {
+    // getter
+    public boolean getIsAvailable() {
         return isAvailable;
     }
 
-    @Override
     public String toString() {
         return "Room Number: " + roomNumber +
                 ", Type: " + type +
