@@ -1,4 +1,6 @@
-public class Hotel {
+import java.io.*;
+
+public class Hotel implements Serializable {
     private String name;
     private Manager manager;
     private Employee[] employees;
@@ -34,7 +36,8 @@ public class Hotel {
     }
 
     // create a new booking and adds it to the bookings array
-    public boolean addBooking(Guest guest, int numberOfNights, int roomNumber, Employee employee) throws RoomUnavailableException {
+    public boolean addBooking(Guest guest, int numberOfNights, int roomNumber, Employee employee)
+            throws RoomUnavailableException {
         if (bookingCount >= bookings.length) {
             return false;
         }
@@ -104,7 +107,8 @@ public class Hotel {
         return true;
     }
 
-    // recursive method that find and return a room by looking for it using room number
+    // recursive method that find and return a room by looking for it using room
+    // number
 
     public Room findRoom(int roomNumber, int index) {
         if (index >= roomCount) {
@@ -118,7 +122,8 @@ public class Hotel {
         return findRoom(roomNumber, index + 1);
     }
 
-    // recursive method that find and return a booking by looking for it using booking id
+    // recursive method that find and return a booking by looking for it using
+    // booking id
     public Booking findBooking(int bookingId, int index) {
         if (index >= bookingCount) {
             return null;
@@ -249,9 +254,43 @@ public class Hotel {
     // getter
     public Employee[] getEmployees() {
         Employee[] hiredEmployees = new Employee[employeesCount];
-        for (int i = 0; i < employeesCount; i++){
+        for (int i = 0; i < employeesCount; i++) {
             hiredEmployees[i] = employees[i];
         }
         return hiredEmployees;
     }
+
+    // save hotel object to file
+    public void saveToFile() {
+        try {
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("HRS.data"));
+        out.writeObject(this);
+        out.close();
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    // load hotel object from file
+    public static Hotel loadFromFile() {
+        Hotel hotel = null;
+        try {
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream("HRS.data"));
+        hotel = (Hotel)in.readObject();
+        in.close();
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+
+        }
+
+        return hotel;
+
+    }
+    
 }

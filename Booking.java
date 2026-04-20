@@ -1,4 +1,6 @@
-public class Booking implements Billable {
+import java.io.Serializable;
+
+public class Booking implements Billable, Serializable {
 
     private int bookingId;
     private Guest guest;

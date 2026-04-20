@@ -1,4 +1,6 @@
-public class Room implements Billable {
+import java.io.Serializable;
+
+public class Room implements Billable, Serializable {
     private double nightPrice;
     private String type;
     private int roomNumber;
