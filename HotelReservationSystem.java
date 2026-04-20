@@ -1,5 +1,3 @@
-//  Mohamed Abbas Elshaikh Mohamed Salih 446108989
-
 import java.util.Scanner;
 
 public class HotelReservationSystem {
