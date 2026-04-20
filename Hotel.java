@@ -34,7 +34,7 @@ public class Hotel {
     }
 
     // create a new booking and adds it to the bookings array
-    public boolean addBooking(Guest guest, int numberOfNights, int roomNumber, Employee employee) {
+    public boolean addBooking(Guest guest, int numberOfNights, int roomNumber, Employee employee) throws RoomUnavailableException {
         if (bookingCount >= bookings.length) {
             return false;
         }
@@ -42,7 +42,7 @@ public class Hotel {
         Room room = findRoom(roomNumber, 0);
 
         if (room == null || !room.getIsAvailable()) {
-            return false;
+            throw new RoomUnavailableException("Room Unavailable");
         }
 
         room.bookRoom();
