@@ -32,6 +32,7 @@ public class Hotel implements Serializable {
 
         rooms[roomCount] = new Room(type, price, roomCount + 1);
         roomCount++;
+        saveToFile();
         return true;
     }
 
@@ -54,6 +55,7 @@ public class Hotel implements Serializable {
         bookings[bookingCount] = booking;
         bookingCount++;
 
+        saveToFile();
         return true;
     }
 
@@ -103,7 +105,7 @@ public class Hotel implements Serializable {
 
         bookings[bookingCount - 1] = null;
         bookingCount--;
-
+        saveToFile();
         return true;
     }
 
@@ -173,6 +175,7 @@ public class Hotel implements Serializable {
                 bookings[bookingCount - 1] = null;
                 bookingCount--;
                 i--;
+                saveToFile();
                 removed = true;
             }
         }
@@ -199,6 +202,7 @@ public class Hotel implements Serializable {
 
         employees[employeesCount] = employee;
         employeesCount++;
+        saveToFile();
         return true;
     }
 
@@ -224,6 +228,7 @@ public class Hotel implements Serializable {
         employees[employeesCount - 1] = null;
         employeesCount--;
 
+        saveToFile();
         return true;
     }
 
