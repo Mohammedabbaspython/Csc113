@@ -39,3 +39,56 @@
     * **Logic:** Loops through `bookings`. If a booking's `isCheckedOut` is `true` (which guarantees the bill is already paid), it adds the booking's `getPrice()` to `totalRevenue`, removes it from the array, and shifts the remaining elements down to free up capacity.
 * **`hireEmployee(Employee employee)` / `fireEmployee(Employee employee)`**
     * **Logic:** `hire` checks array limits before adding. `fire` searches for the employee, removes them, and shifts the array elements to the left to maintain a contiguous list without empty spaces.
+
+
+
+    ### GUI Component Summary
+
+#### 1. Login Frame
+**Architecture:** The initial `JFrame` serving as the access point to the system. It uses a simple layout to separate manager access from employee access.
+
+*   **Employee Login Section:**
+    *   `JLabel`: "Choose Employee Account:"
+    *   `JComboBox`: A drop-down menu populated with the system's current employees.
+    *   `JButton`: "Login as Employee" (Grabs the selected employee from the drop-down, sets the static session variable, hides this frame, and opens the Employee Menu).
+*   **Manager Login Section:**
+    *   `JLabel`: "Manager Access:"
+    *   `JButton`: "Login as Manager" (Hides this frame and opens the Manager Menu).
+
+#### 2. Manager Menu Frame
+**Architecture:** A single `JFrame` displaying all manager actions simultaneously using a flat layout (e.g., `GridLayout`). All action results (success, failure, or data output) are displayed to the user via `JOptionPane` message dialogs. 
+
+*   **Add New Room Section:**
+    *   `JTextField`: Input for Room Type.
+    *   `JTextField`: Input for Price per Night.
+    *   `JButton`: "Add Room" (Triggers backend method, shows success/fail dialog, clears fields).
+*   **Hire Employee Section:**
+    *   `JComboBox`: Drop-down menu populated with candidates.
+    *   `JButton`: "Hire Employee" (Triggers hire method for the selected person, shows dialog).
+*   **Fire Employee Section:**
+    *   `JComboBox`: Drop-down menu populated with current active employees.
+    *   `JButton`: "Fire Employee" (Triggers fire method, shows dialog, removes them from the combo box).
+*   **Archive Section:**
+    *   `JButton`: "Archive Bookings" (Triggers archiving method and pops a dialog showing the total revenue).
+*   **Navigation:**
+    *   `JButton`: "Logout" (Wipes the static session variable, hides this frame, and re-opens the Login Frame).
+
+#### 3. Employee Menu Frame
+**Architecture:** A single `JFrame` acting as the reception desk control panel. It uses a flat layout (e.g., `GridLayout`) to display all daily operations simultaneously. To keep the interface clean and avoid extra windows, all search results, receipts, and confirmations are displayed via `JOptionPane` message dialogs.
+
+*   **Create Booking Section:**
+    *   `JComboBox`: Drop-down menu populated with currently available rooms.
+    *   `JComboBox`: Drop-down menu populated with registered guests.
+    *   `JTextField`: Input for Number of Nights.
+    *   `JButton`: "Create Booking" (Triggers backend booking logic, shows success/fail dialog, and refreshes the available rooms drop-down).
+*   **Search Room Section:**
+    *   `JTextField`: Input for Room Number.
+    *   `JButton`: "Search Room" (Retrieves room details and displays them in a pop-up dialog box).
+*   **Cancel Booking Section:**
+    *   `JTextField`: Input for Booking ID.
+    *   `JButton`: "Cancel Booking" (Triggers cancellation method, shows confirmation dialog).
+*   **Check-Out Section:**
+    *   `JComboBox`: Drop-down menu populated with current active bookings or guests.
+    *   `JButton`: "Check-Out & Pay" (Processes the check-out, displays the final bill amount in a dialog box, and clears the room).
+*   **Navigation:**
+    *   `JButton`: "Logout" (Wipes the static session variable to `null`, hides this frame, and re-opens the Login Frame).
