@@ -138,12 +138,12 @@ public class Hotel implements Serializable {
         return findBooking(bookingId, index + 1);
     }
 
-    // returns all the bookings of a specific guest
+    // returns all the bookings of a specific guest matching by guest id
     public Booking[] findGuestBookings(Guest guest) {
         int count = 0;
 
         for (int i = 0; i < bookingCount; i++) {
-            if (bookings[i].getGuest() == guest) {
+            if (bookings[i].getGuest().getId() == guest.getId()) {
                 count++;
             }
         }
@@ -152,7 +152,7 @@ public class Hotel implements Serializable {
         int j = 0;
 
         for (int i = 0; i < bookingCount; i++) {
-            if (bookings[i].getGuest() == guest) {
+            if (bookings[i].getGuest().getId() == guest.getId()) {
                 result[j] = bookings[i];
                 j++;
             }
