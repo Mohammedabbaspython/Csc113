@@ -437,6 +437,7 @@ class SearchRoomListener implements ActionListener {
             JOptionPane.showMessageDialog(HotelReservationSystemGui.employeeFrame, "Invalid room number.", "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+        searchRoomField.setText("");
     }
 }
 
@@ -520,6 +521,7 @@ class CheckOutListener implements ActionListener {
                         "Check-out successful. Total paid: " + b.getPrice() + " sar");
                 roomComboBox.addItem(b.getRoom());;
                 checkoutBookingBox.removeItem(b);
+                HotelReservationSystemGui.hotel.saveToFile();
             } else {
                 JOptionPane.showMessageDialog(HotelReservationSystemGui.employeeFrame,
                         "Failed to check-out or already checked out.", "Error", JOptionPane.ERROR_MESSAGE);
