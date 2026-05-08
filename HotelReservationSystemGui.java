@@ -424,7 +424,7 @@ class SearchRoomListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             int roomNumber = Integer.parseInt(searchRoomField.getText());
-            Room room = HotelReservationSystemGui.hotel.findRoom(roomNumber, 0);
+            Room room = HotelReservationSystemGui.hotel.findRoom(roomNumber, HotelReservationSystemGui.hotel.getRooms().getHead());
             if (room != null) {
                 JOptionPane.showMessageDialog(HotelReservationSystemGui.employeeFrame, room.toString(), "Room Details",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -453,7 +453,7 @@ class CancelBookingListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             int bookingId = Integer.parseInt(cancelBookingField.getText());
-            Booking booking = HotelReservationSystemGui.hotel.findBooking(bookingId, 0);
+            Booking booking = HotelReservationSystemGui.hotel.findBooking(bookingId, HotelReservationSystemGui.hotel.getBookings().getHead());
             if (booking != null) {
                 int confirm = JOptionPane.showConfirmDialog(HotelReservationSystemGui.employeeFrame,
                         "Cancel booking for " + booking.getGuest().getName() + "?", "Confirm",

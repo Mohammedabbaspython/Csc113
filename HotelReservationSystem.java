@@ -102,7 +102,7 @@ public class HotelReservationSystem {
                     } else if (choice == 2) {
                         room = null;
                         System.out.println("Enter room Number: ");
-                        room = hotel.findRoom(input.nextInt(), 0);
+                        room = hotel.findRoom(input.nextInt(), hotel.getRooms().getHead());
 
                         if (room == null) {
                             System.out.println("Room not found!");
@@ -114,7 +114,7 @@ public class HotelReservationSystem {
                     } else if (choice == 3) {
                         booking = null;
                         System.out.println("Enter booking id to cancel: ");
-                        booking = hotel.findBooking(input.nextInt(), 0);
+                        booking = hotel.findBooking(input.nextInt(), hotel.getBookings().getHead());
 
                         if (booking == null) {
                             System.out.println("Booking not found!");

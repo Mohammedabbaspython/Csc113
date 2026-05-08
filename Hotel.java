@@ -46,7 +46,7 @@ public class Hotel implements Serializable {
             return false;
         }
 
-        Room room = findRoom(roomNumber, 0);
+        Room room = findRoom(roomNumber, rooms.getHead());
 
         if (room == null || !room.getIsAvailable()) {
             throw new RoomUnavailableException("Room Unavailable");
@@ -115,17 +115,9 @@ public class Hotel implements Serializable {
 
     // recursive method that find and return a room by looking for it using room
     // number
-
-    public Room findRoom(int roomNumber, int index) {
-        if (index >= rooms.size()) {
+    public Room findRoom(int roomNumber, Node current) {
+        if (current == null) {
             return null;
-        }
-
-        Node current = rooms.getHead();
-        
-        // traverse to the current index
-        for (int i = 0; i < index; i++) {
-            current = current.getNext();
         }
 
         Room room = (Room) current.getData();
@@ -133,21 +125,14 @@ public class Hotel implements Serializable {
             return room;
         }
 
-        return findRoom(roomNumber, index + 1);
+        return findRoom(roomNumber, current.getNext());
     }
 
     // recursive method that find and return a booking by looking for it using
     // booking id
-    public Booking findBooking(int bookingId, int index) {
-        if (index >= bookings.size()) {
+    public Booking findBooking(int bookingId, Node current) {
+        if (current == null) {
             return null;
-        }
-
-        Node current = bookings.getHead();
-        
-        // traverse to the current index
-        for (int i = 0; i < index; i++) {
-            current = current.getNext();
         }
 
         Booking booking = (Booking) current.getData();
@@ -155,7 +140,7 @@ public class Hotel implements Serializable {
             return booking;
         }
 
-        return findBooking(bookingId, index + 1);
+        return findBooking(bookingId, current.getNext());
     }
 
     // returns all the bookings of a specific guest matching by guest id
@@ -279,8 +264,15 @@ public class Hotel implements Serializable {
 
         return result;
     }
-
     // getter
+    public LinkedList getRooms() {
+        return rooms;
+    }
+
+    public LinkedList getBookings() {
+        return bookings;
+    }
+
     public Employee[] getEmployees() {
         Employee[] hiredEmployees = new Employee[employees.size()];
         Node current = employees.getHead();
