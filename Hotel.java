@@ -3,35 +3,38 @@ import java.io.*;
 public class Hotel implements Serializable {
     private String name;
     private Manager manager;
-    private Employee[] employees;
-    private int employeesCount;
-    private Room[] rooms;
-    private Booking[] bookings;
-    private int roomCount;
-    private int bookingCount;
+    private LinkedList employees;
+    private int maxEmployees;
+    private LinkedList rooms;
+    private int roomIdCounter;
+    private int maxRooms;
+    private LinkedList bookings;
+    private int bookingIdCounter;
+    private int maxBookings;
     private double totalRevenue;
 
     // constructor
     public Hotel(String name, int maxRooms, int maxBookings, Manager manager, int maxEmployees) {
         this.name = name;
         this.manager = manager;
-        this.employees = new Employee[maxEmployees];
-        this.rooms = new Room[maxRooms];
-        this.bookings = new Booking[maxBookings];
-        this.employeesCount = 0;
-        this.roomCount = 0;
-        this.bookingCount = 0;
+        this.employees = new LinkedList("Employees");
+        this.maxEmployees = maxEmployees;
+        this.rooms = new LinkedList("Rooms");
+        this.maxRooms = maxRooms;
+        this.roomIdCounter = 0;
+        this.bookings = new LinkedList("Bookings");
+        this.maxBookings = maxBookings;
+        this.bookingIdCounter = 0;
         this.totalRevenue = 0;
     }
 
     // adds a new room to the hotel and assigns it a number
     public boolean addRoom(String type, double price) {
-        if (roomCount >= rooms.length) {
+        if (rooms.size() >= maxRooms) {
             return false;
         }
 
-        rooms[roomCount] = new Room(type, price, roomCount + 1);
-        roomCount++;
+        rooms.insertAtBack(new Room(type, price, ++roomIdCounter));
         saveToFile();
         return true;
     }
@@ -39,7 +42,7 @@ public class Hotel implements Serializable {
     // create a new booking and adds it to the bookings array
     public boolean addBooking(Guest guest, int numberOfNights, int roomNumber, Employee employee)
             throws RoomUnavailableException {
-        if (bookingCount >= bookings.length) {
+        if (bookings.size() >= maxBookings) {
             return false;
         }
 
@@ -51,9 +54,8 @@ public class Hotel implements Serializable {
 
         room.bookRoom();
 
-        Booking booking = new Booking(bookingCount + 1, guest, room, numberOfNights, employee);
-        bookings[bookingCount] = booking;
-        bookingCount++;
+        Booking booking = new Booking(++bookingIdCounter, guest, room, numberOfNights, employee);
+        bookings.insertAtBack(booking);
 
         saveToFile();
         return true;
@@ -62,21 +64,25 @@ public class Hotel implements Serializable {
     // return an array of all the available rooms in the hotel
     public Room[] availableRooms() {
         int count = 0;
-
-        for (int i = 0; i < roomCount; i++) {
-            if (rooms[i] != null && rooms[i].getIsAvailable()) {
+        Node current = rooms.getHead();
+        while (current != null) {
+            Room room = (Room) current.getData();
+            if (room.getIsAvailable()) {
                 count++;
             }
+            current = current.getNext();
         }
 
         Room[] available = new Room[count];
         int j = 0;
-
-        for (int i = 0; i < roomCount; i++) {
-            if (rooms[i] != null && rooms[i].getIsAvailable()) {
-                available[j] = rooms[i];
+        current = rooms.getHead();
+        while (current != null) {
+            Room room = (Room) current.getData();
+            if (room.getIsAvailable()) {
+                available[j] = room;
                 j++;
             }
+            current = current.getNext();
         }
 
         return available;
@@ -84,41 +90,41 @@ public class Hotel implements Serializable {
 
     // remove a booking from list and releases the room
     public boolean cancelBooking(int bookingId) {
-        int index = -1;
-
-        for (int i = 0; i < bookingCount; i++) {
-            if (bookings[i].getBookingId() == bookingId) {
-                index = i;
-                break;
+        Node current = bookings.getHead();
+        
+        while (current != null) {
+            Booking booking = (Booking) current.getData();
+            if (booking.getBookingId() == bookingId) {
+                if (booking.getIsCheckedOut()) {
+                    return false;
+                }
+                booking.getRoom().releaseRoom();
+                bookings.remove(booking);
+                saveToFile();
+                return true;
             }
+            current = current.getNext();
         }
 
-        if (index == -1 || bookings[index].getIsCheckedOut()) {
-            return false;
-        }
-
-        bookings[index].getRoom().releaseRoom();
-
-        for (int i = index; i < bookingCount - 1; i++) {
-            bookings[i] = bookings[i + 1];
-        }
-
-        bookings[bookingCount - 1] = null;
-        bookingCount--;
-        saveToFile();
-        return true;
+        return false;
     }
 
     // recursive method that find and return a room by looking for it using room
     // number
 
     public Room findRoom(int roomNumber, int index) {
-        if (index >= roomCount) {
+        if (index >= rooms.size()) {
             return null;
         }
 
-        if (rooms[index].getRoomNumber() == roomNumber) {
-            return rooms[index];
+        Node current = rooms.getHead();
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+
+        Room room = (Room) current.getData();
+        if (room.getRoomNumber() == roomNumber) {
+            return room;
         }
 
         return findRoom(roomNumber, index + 1);
@@ -127,12 +133,18 @@ public class Hotel implements Serializable {
     // recursive method that find and return a booking by looking for it using
     // booking id
     public Booking findBooking(int bookingId, int index) {
-        if (index >= bookingCount) {
+        if (index >= bookings.size()) {
             return null;
         }
 
-        if (bookings[index].getBookingId() == bookingId) {
-            return bookings[index];
+        Node current = bookings.getHead();
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+
+        Booking booking = (Booking) current.getData();
+        if (booking.getBookingId() == bookingId) {
+            return booking;
         }
 
         return findBooking(bookingId, index + 1);
@@ -141,21 +153,25 @@ public class Hotel implements Serializable {
     // returns all the bookings of a specific guest matching by guest id
     public Booking[] findGuestBookings(Guest guest) {
         int count = 0;
-
-        for (int i = 0; i < bookingCount; i++) {
-            if (bookings[i].getGuest().getId() == guest.getId()) {
+        Node current = bookings.getHead();
+        while (current != null) {
+            Booking booking = (Booking) current.getData();
+            if (booking.getGuest().getId() == guest.getId()) {
                 count++;
             }
+            current = current.getNext();
         }
 
         Booking[] result = new Booking[count];
         int j = 0;
-
-        for (int i = 0; i < bookingCount; i++) {
-            if (bookings[i].getGuest().getId() == guest.getId()) {
-                result[j] = bookings[i];
+        current = bookings.getHead();
+        while (current != null) {
+            Booking booking = (Booking) current.getData();
+            if (booking.getGuest().getId() == guest.getId()) {
+                result[j] = booking;
                 j++;
             }
+            current = current.getNext();
         }
 
         return result;
@@ -164,20 +180,19 @@ public class Hotel implements Serializable {
     // remove booking from list if it is checked out and returns true
     public boolean archiveCompleteBookings() {
         boolean removed = false;
+        Node current = bookings.getHead();
 
-        for (int i = 0; i < bookingCount; i++) {
-            if (bookings[i].getIsCheckedOut()) {
-                totalRevenue += bookings[i].getPrice();
-                for (int j = i; j < bookingCount - 1; j++) {
-                    bookings[j] = bookings[j + 1];
-                }
-
-                bookings[bookingCount - 1] = null;
-                bookingCount--;
-                i--;
-                saveToFile();
+        while (current != null) {
+            Booking booking = (Booking) current.getData();
+            Node nextNode = current.getNext();
+            
+            if (booking.getIsCheckedOut()) {
+                totalRevenue += booking.getPrice();
+                bookings.remove(booking);
                 removed = true;
+                saveToFile();
             }
+            current = nextNode;
         }
 
         return removed;
@@ -190,46 +205,37 @@ public class Hotel implements Serializable {
 
     // add employee to the list if he is not in it and returns true
     public boolean hireEmployee(Employee employee) {
-        if (employeesCount >= employees.length) {
+        if (employees.size() >= maxEmployees) {
             return false;
         }
         // check if employee is already hired
-        for (int i = 0; i < employeesCount; i++) {
-            if (employee == employees[i]) {
+        Node current = employees.getHead();
+        while (current != null) {
+            if (employee == current.getData()) {
                 return false;
             }
+            current = current.getNext();
         }
 
-        employees[employeesCount] = employee;
-        employeesCount++;
+        employees.insertAtBack(employee);
         saveToFile();
         return true;
     }
 
     // remove employee if he is in the employees list and returns true
     public boolean fireEmployee(Employee employee) {
-        int index = -1;
+        Node current = employees.getHead();
 
-        for (int i = 0; i < employeesCount; i++) {
-            if (employees[i] == employee) {
-                index = i;
-                break;
+        while (current != null) {
+            if (current.getData().equals(employee)) {
+                employees.remove(employee);
+                saveToFile();
+                return true;
             }
+            current = current.getNext();
         }
 
-        if (index == -1) {
-            return false;
-        }
-
-        for (int i = index; i < employeesCount - 1; i++) {
-            employees[i] = employees[i + 1];
-        }
-
-        employees[employeesCount - 1] = null;
-        employeesCount--;
-
-        saveToFile();
-        return true;
+        return false;
     }
 
     // string representation
@@ -239,18 +245,24 @@ public class Hotel implements Serializable {
                 "\nTotal Revenue: " + totalRevenue +
                 "\nRooms:\n";
 
-        for (int i = 0; i < roomCount; i++) {
-            result += rooms[i] + "\n";
+        Node current = rooms.getHead();
+        while (current != null) {
+            result += current.getData() + "\n";
+            current = current.getNext();
         }
 
         result += "Bookings:\n";
-        for (int i = 0; i < bookingCount; i++) {
-            result += bookings[i] + "\n";
+        current = bookings.getHead();
+        while (current != null) {
+            result += current.getData() + "\n";
+            current = current.getNext();
         }
 
         result += "Employees:\n";
-        for (int i = 0; i < employeesCount; i++) {
-            result += employees[i] + "\n";
+        current = employees.getHead();
+        while (current != null) {
+            result += current.getData() + "\n";
+            current = current.getNext();
         }
 
         return result;
@@ -258,9 +270,12 @@ public class Hotel implements Serializable {
 
     // getter
     public Employee[] getEmployees() {
-        Employee[] hiredEmployees = new Employee[employeesCount];
-        for (int i = 0; i < employeesCount; i++) {
-            hiredEmployees[i] = employees[i];
+        Employee[] hiredEmployees = new Employee[employees.size()];
+        Node current = employees.getHead();
+        int i = 0;
+        while (current != null) {
+            hiredEmployees[i++] = (Employee) current.getData();
+            current = current.getNext();
         }
         return hiredEmployees;
     }
@@ -268,11 +283,10 @@ public class Hotel implements Serializable {
     // save hotel object to file
     public void saveToFile() {
         try {
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("HRS.data"));
-        out.writeObject(this);
-        out.close();
-        }
-        catch (IOException e) {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("HRS.data"));
+            out.writeObject(this);
+            out.close();
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
@@ -282,14 +296,12 @@ public class Hotel implements Serializable {
     public static Hotel loadFromFile() {
         Hotel hotel = null;
         try {
-        ObjectInputStream in = new ObjectInputStream(new FileInputStream("HRS.data"));
-        hotel = (Hotel)in.readObject();
-        in.close();
-        }
-        catch (IOException e) {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("HRS.data"));
+            hotel = (Hotel) in.readObject();
+            in.close();
+        } catch (IOException e) {
             System.out.println(e.getMessage());
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
 
         }
@@ -297,5 +309,5 @@ public class Hotel implements Serializable {
         return hotel;
 
     }
-    
+
 }

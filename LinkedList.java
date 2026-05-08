@@ -1,4 +1,6 @@
-public class LinkedList {
+import java.io.Serializable;
+
+public class LinkedList implements Serializable {
     private Node head;
     private Node tail;
     private String name;
@@ -82,6 +84,35 @@ public class LinkedList {
         }
 
         return current.getData();
+    }
+
+    public boolean remove(Object data) {
+        if (isEmpty()) {
+            return false;
+        }
+
+        if (head.getData().equals(data)) {
+            removeFromFront();
+            return true;
+        }
+
+        Node current = head.getNext();
+        Node previous = head;
+
+        while (current != null) {
+            if (current.getData().equals(data)) {
+                if (current == tail) {
+                    removeFromBack();
+                } else {
+                    previous.setNext(current.getNext());
+                }
+                return true;
+            }
+            previous = current;
+            current = current.getNext();
+        }
+
+        return false;
     }
     
     public int size() {
