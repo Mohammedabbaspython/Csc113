@@ -65,6 +65,8 @@ public class Hotel implements Serializable {
     public Room[] availableRooms() {
         int count = 0;
         Node current = rooms.getHead();
+        
+        // count available rooms in list
         while (current != null) {
             Room room = (Room) current.getData();
             if (room.getIsAvailable()) {
@@ -76,6 +78,8 @@ public class Hotel implements Serializable {
         Room[] available = new Room[count];
         int j = 0;
         current = rooms.getHead();
+        
+        // collect available rooms into array
         while (current != null) {
             Room room = (Room) current.getData();
             if (room.getIsAvailable()) {
@@ -118,6 +122,8 @@ public class Hotel implements Serializable {
         }
 
         Node current = rooms.getHead();
+        
+        // traverse to the current index
         for (int i = 0; i < index; i++) {
             current = current.getNext();
         }
@@ -138,6 +144,8 @@ public class Hotel implements Serializable {
         }
 
         Node current = bookings.getHead();
+        
+        // traverse to the current index
         for (int i = 0; i < index; i++) {
             current = current.getNext();
         }
@@ -154,6 +162,8 @@ public class Hotel implements Serializable {
     public Booking[] findGuestBookings(Guest guest) {
         int count = 0;
         Node current = bookings.getHead();
+        
+        // count guest bookings
         while (current != null) {
             Booking booking = (Booking) current.getData();
             if (booking.getGuest().getId() == guest.getId()) {
@@ -165,6 +175,8 @@ public class Hotel implements Serializable {
         Booking[] result = new Booking[count];
         int j = 0;
         current = bookings.getHead();
+        
+        // collect guest bookings into array
         while (current != null) {
             Booking booking = (Booking) current.getData();
             if (booking.getGuest().getId() == guest.getId()) {
@@ -273,6 +285,8 @@ public class Hotel implements Serializable {
         Employee[] hiredEmployees = new Employee[employees.size()];
         Node current = employees.getHead();
         int i = 0;
+        
+        // collect employees into array
         while (current != null) {
             hiredEmployees[i++] = (Employee) current.getData();
             current = current.getNext();
